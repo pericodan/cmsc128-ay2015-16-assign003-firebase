@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+        <!--Import Google Icon Font-->
+        <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <!--Import materialize.css-->
+        <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+        <!--Import jQuery before materialize.js-->
+        <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script type="text/javascript" src="js/materialize.min.js"></script>
+
+        <!--Let browser know website is optimized for mobile-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+
+    <body>
+
+
+        <div class="container">
+            <div class="row card-panel blue lighten-5" id="input">
+                <div class="input-field col s3">
+                    <input type='text' id='nameInput'>
+                    <label for="nameInput">Name</label>
+                </div>
+                <div class="input-field col s3">
+                    <input type='text' id='organizationInput'>
+                    <label for="organizationInput">Organization</label>
+                </div>
+                <div class="input-field col s3">
+                    <input type='text' id='contactInput'>
+                    <label for="contactInput">Contact</label>
+                </div>
+                <button class="btn waves-effect waves-light" type="submit" id='submitbutton'>Submit
+                    <i class="material-icons right">send</i>
+                </button>
+            </div>
+            <div class="row" id="output">
+                <div id='messagesDiv'>
+                    <table class="table table-condensed" id='mainTable'>
+                        <thead>
+                            <tr>
+                                <th> Name </th>
+                                <th> Organization </th>
+                                <th> Contact Number </th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablebody" style="overflow-y:auto;">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <script>
+        $(document).ready(function(){
+            $('#input').pushpin({ top: $('#input').offset().top });
+
+            $('#output').css("margin-top", $('#input').height());
+            //$('#output').after('#input');
+        });
+
+          var myDataRef = new Firebase('https://pn40py7wj57.firebaseio-demo.com/');
+          $('#submitbutton').on('click', function () {
+              var name = $('#nameInput').val();
+              var organization = $('#organizationInput').val();
+              var contact = $('#contactInput').val();
+              myDataRef.push({name: name, organization: organization, contact: contact});
+             // $('#messageInput').val('');
+          });
+          myDataRef.on('child_added', function(snapshot) {
+            var message = snapshot.val();
+            displayChatMessage(message.name, message.organization, message.contact);
+          });
+          function displayChatMessage(name, organization, contact) {
+            //$('<div/>').text(text).prepend($('<em/>').text(name+': ')).appendTo($('#messagesDiv'));
+            $('#tablebody').append('<tr><td>'+name+'</td><td>'+organization+'</td><td>'+contact+'</td></tr>');
+            $('#messagesDiv')[0].scrollTop = $('#messagesDiv')[0].scrollHeight;
+          };
+        </script>
+    </body>
+</html>
