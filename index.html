@@ -54,18 +54,14 @@
             </div>
         </div>
         <script>
-        $(document).ready(function(){
-            //$('#input').pushpin({ top: $('#input').offset().top });
-
-            //$('#output').css("margin-top", $('#input').height());
-            //$('#output').after('#input');
-        });
 
           var myDataRef = new Firebase('https://pn40py7wj57.firebaseio-demo.com/');
-          $('#submitbutton').on('click', function () {
+          $('#submitbutton').on('click', function () { // functions to add the data in the database
+              //to check all the fields
               if($('#nameInput').val() === "" || $('#organizationInput').val() === "" || $('#contactInput').val()=== ""){
                   alert("All fields are required");
               }
+              //to check if the contact field is valid
               else if(!/^([0-9/+/-])*$/.test($('#contactInput').val())){
                   alert("Invalid character at the contact field");
               }
@@ -75,14 +71,12 @@
                   var contact = $('#contactInput').val();
                   myDataRef.push({name: name, organization: organization, contact: contact});
               }
-             // $('#messageInput').val('');
           });
           myDataRef.on('child_added', function(snapshot) {
             var message = snapshot.val();
             displayChatMessage(message.name, message.organization, message.contact);
           });
-          function displayChatMessage(name, organization, contact) {
-            //$('<div/>').text(text).prepend($('<em/>').text(name+': ')).appendTo($('#messagesDiv'));
+          function displayChatMessage(name, organization, contact) { //this will display the data in a table
             $('#tablebody').prepend('<tr><td>'+name+'</td><td>'+organization+'</td><td>'+contact+'</td></tr>');
             $('#messagesDiv')[0].scrollTop = $('#messagesDiv')[0].scrollHeight;
           };
